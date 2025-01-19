@@ -12,13 +12,13 @@ dotenv.config();
 
 // Initialize Express application
 const app = express();
-app.set("trust proxy", 1);
+
 // MongoDB setup
 const DATABASE_NAME = "caloriscan";
 const COLLECTION_NAME = "apiCallCounts";
 let db, apiCallCollection;
 
-const client = new MongoClient("mongodb+srv://rufusbright595:cir5VeVvHxxA7qUh@caloriscan.huxfy.mongodb.net/?retryWrites=true&w=majority");
+const client = new MongoClient(process.env.MONGO_URI); // Replace with your MongoDB URI
 client.connect().then(() => {
   db = client.db(DATABASE_NAME);
   apiCallCollection = db.collection(COLLECTION_NAME);
@@ -38,11 +38,7 @@ client.connect().then(() => {
 
 // Middleware
 app.use(express.json({ limit: "10mb" })); // Limit request payload size
-app.use(cors({
-  origin: "*", // Allow all origins temporarily for testing
-  methods: ["GET", "POST"], // Allowed HTTP methods
-  allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
-}));
+app.use(cors());
 app.use(useragent.express()); // Detect user agents for bot protection
 
 // Logger configuration
@@ -79,13 +75,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/debug", (req, res) => {
-  res.json({
-    mongoUriExists: !!mongodb+srv://rufusbright595:cir5VeVvHxxA7qUh@caloriscan.huxfy.mongodb.net/?retryWrites=true&w=majority,
-    mongoUri: process.env.MONGO_URI ? "Set correctly" : "Not set",
-  });
-});
-
 // **Google Vision API Route**
 app.post("/api/detect", async (req, res) => {
   const { image } = req.body;
@@ -110,7 +99,7 @@ app.post("/api/detect", async (req, res) => {
 
     // Send image to Google Vision API
     const visionResponse = await axios.post(
-      `https://vision.googleapis.com/v1/images:annotate?key=AIzaSyD4pA4kTURtaiz9pvtr76Plh_VyNFsRBys`,
+      `https://vision.googleapis.com/v1/images:annotate?key=${process.env.GOOGLE_API_KEY}`,
       {
         requests: [
           {
@@ -178,7 +167,7 @@ Ensure the output is valid JSON and fits within 500 tokens.
       },
       {
         headers: {
-          Authorization: `Bearer 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`,
+          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
         },
       }
     );
