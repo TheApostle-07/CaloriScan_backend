@@ -81,7 +81,7 @@ app.use((req, res, next) => {
 
 app.get("/debug", (req, res) => {
   res.json({
-    mongoUriExists: !!process.env.MONGO_URI,
+    mongoUriExists: !!mongodb+srv://rufusbright595:cir5VeVvHxxA7qUh@caloriscan.huxfy.mongodb.net/?retryWrites=true&w=majority,
     mongoUri: process.env.MONGO_URI ? "Set correctly" : "Not set",
   });
 });
@@ -110,7 +110,7 @@ app.post("/api/detect", async (req, res) => {
 
     // Send image to Google Vision API
     const visionResponse = await axios.post(
-      `https://vision.googleapis.com/v1/images:annotate?key=${process.env.GOOGLE_API_KEY}`,
+      `https://vision.googleapis.com/v1/images:annotate?key=AIzaSyD4pA4kTURtaiz9pvtr76Plh_VyNFsRBys`,
       {
         requests: [
           {
@@ -178,7 +178,7 @@ Ensure the output is valid JSON and fits within 500 tokens.
       },
       {
         headers: {
-          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+          Authorization: `Bearer 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`,
         },
       }
     );
