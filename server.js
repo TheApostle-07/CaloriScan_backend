@@ -75,6 +75,13 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get("/debug", (req, res) => {
+  res.json({
+    mongoUriExists: !!process.env.MONGO_URI,
+    mongoUri: process.env.MONGO_URI ? "Set correctly" : "Not set",
+  });
+});
+
 // **Google Vision API Route**
 app.post("/api/detect", async (req, res) => {
   const { image } = req.body;
