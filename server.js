@@ -38,7 +38,11 @@ client.connect().then(() => {
 
 // Middleware
 app.use(express.json({ limit: "10mb" })); // Limit request payload size
-app.use(cors());
+app.use(cors({
+  origin: "*", // Allow all origins temporarily for testing
+  methods: ["GET", "POST"], // Allowed HTTP methods
+  allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
+}));
 app.use(useragent.express()); // Detect user agents for bot protection
 
 // Logger configuration
