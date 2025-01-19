@@ -18,7 +18,7 @@ const DATABASE_NAME = "caloriscan";
 const COLLECTION_NAME = "apiCallCounts";
 let db, apiCallCollection;
 
-const client = new MongoClient(process.env.MONGO_URI); // Replace with your MongoDB URI
+const client = new MongoClient("mongodb+srv://rufusbright595:cir5VeVvHxxA7qUh@caloriscan.huxfy.mongodb.net/?retryWrites=true&w=majority&appName=CaloriScan");
 client.connect().then(() => {
   db = client.db(DATABASE_NAME);
   apiCallCollection = db.collection(COLLECTION_NAME);
