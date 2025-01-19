@@ -13,9 +13,8 @@
     }
   ],
   "env": {
-    "MONGO_URI": "@mongo_uri",
-    "OPENAI_API_KEY": "@openai_api_key",
-    "GOOGLE_API_KEY": "@google_api_key",
-    "PORT": "3000"
+    "MONGO_URI": "MONGO_URI",
+    "OPENAI_API_KEY": "OPENAI_API_KEY",
+    "GOOGLE_API_KEY": "GOOGLE_API_KEY"
   }
 }
