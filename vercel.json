@@ -7,11 +7,6 @@
     }
   ],
   "routes": [
-   { "src": "/(.*)", "dest": "server.js" }
-  ],
-  "env": {
-    "MONGO_URI": "MONGO_URI",
-    "OPENAI_API_KEY": "OPENAI_API_KEY",
-    "GOOGLE_API_KEY": "GOOGLE_API_KEY"
-  }
+    { "src": "/(.*)", "dest": "server.js" }
+  ]
 }
