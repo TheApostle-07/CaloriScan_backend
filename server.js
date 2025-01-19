@@ -12,7 +12,7 @@ dotenv.config();
 
 // Initialize Express application
 const app = express();
-
+app.set("trust proxy", 1);
 // MongoDB setup
 const DATABASE_NAME = "caloriscan";
 const COLLECTION_NAME = "apiCallCounts";
