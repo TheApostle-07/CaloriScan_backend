@@ -40,6 +40,8 @@ client.connect().then(() => {
 app.use(express.json({ limit: "10mb" })); // Limit request payload size
 app.use(cors());
 app.use(useragent.express()); // Detect user agents for bot protection
+app.set("trust proxy", 1); // Required for rate limiting when deployed behind a proxy (e.g., Vercel)
+
 
 // Logger configuration
 const logger = winston.createLogger({
