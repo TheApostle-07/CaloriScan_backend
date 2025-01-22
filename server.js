@@ -18,41 +18,43 @@ const DATABASE_NAME = "caloriscan";
 const COLLECTION_NAME = "apiCallCounts";
 let db, apiCallCollection;
 
-const client = new MongoClient(process.env.MONGO_URI); // Replace with your MongoDB URI
-client
-  .connect()
-  .then(() => {
-    console.log("MongoDB connected successfully!");
-    db = client.db(DATABASE_NAME);
-    apiCallCollection = db.collection(COLLECTION_NAME);
-    console.log("Collection initialized:", apiCallCollection);
+// MongoDB connection logic
+const client = new MongoClient(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
-    // Ensure the collection has a document to track API calls
-    return apiCallCollection.updateOne(
-      { key: "apiCallCount" },
-      { $setOnInsert: { key: "apiCallCount", count: 0 } },
-      { upsert: true }
-    );
-  })
-  .then(() => {
-    console.log("API call tracking initialized in MongoDB.");
-  })
-  .catch((err) => {
-    console.error("Error connecting to MongoDB or initializing data:", err.message);
-    process.exit(1); // Exit if the database connection or initialization fails
-  });
+async function connectToDatabase() {
+  try {
+    if (!apiCallCollection) {
+      console.log("Connecting to MongoDB...");
+      await client.connect();
+      db = client.db(DATABASE_NAME);
+      apiCallCollection = db.collection(COLLECTION_NAME);
 
-  // Ensure the collection has a document to track API calls
-  apiCallCollection.updateOne(
-    { key: "apiCallCount" },
-    { $setOnInsert: { key: "apiCallCount", count: 0 } },
-    { upsert: true }
-  );
+      console.log("MongoDB connected and collection initialized.");
+      // Ensure the collection has a document to track API calls
+      await apiCallCollection.updateOne(
+        { key: "apiCallCount" },
+        { $setOnInsert: { key: "apiCallCount", count: 0 } },
+        { upsert: true }
+      );
+      console.log("API call tracking initialized.");
+    }
+  } catch (err) {
+    console.error("Error connecting to MongoDB:", err.message);
+    process.exit(1); // Exit if the database connection fails
+  }
+}
+connectToDatabase();
 
-  console.log("Connected to MongoDB");
-}).catch(err => {
-  console.error("Error connecting to MongoDB:", err);
-  process.exit(1); // Exit if the database connection fails
+// Middleware to ensure MongoDB connection
+app.use(async (req, res, next) => {
+  if (!apiCallCollection) {
+    console.log("Database not initialized. Connecting...");
+    await connectToDatabase();
+  }
+  next();
 });
 
 // Middleware
