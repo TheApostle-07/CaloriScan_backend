@@ -19,9 +19,17 @@ const COLLECTION_NAME = "apiCallCounts";
 let db, apiCallCollection;
 
 const client = new MongoClient(process.env.MONGO_URI); // Replace with your MongoDB URI
-client.connect().then(() => {
-  db = client.db(DATABASE_NAME);
-  apiCallCollection = db.collection(COLLECTION_NAME);
+client.connect()
+  .then(() => {
+    console.log("MongoDB connected successfully!");
+    db = client.db(DATABASE_NAME);
+    apiCallCollection = db.collection(COLLECTION_NAME);
+    console.log("Collection initialized:", apiCallCollection);
+  })
+  .catch(err => {
+    console.error("Error connecting to MongoDB:", err.message);
+    process.exit(1); // Exit if the database connection fails
+  });
 
   // Ensure the collection has a document to track API calls
   apiCallCollection.updateOne(
